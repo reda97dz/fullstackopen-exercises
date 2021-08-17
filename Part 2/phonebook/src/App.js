@@ -12,10 +12,26 @@ const App = () => {
 
   const addName = (event) => {
     event.preventDefault()
+
     const nameObject = {
       name: newName
     }
-    setPersons(persons.concat(nameObject))
+
+    var found = false
+
+    persons.forEach(function (item) {
+      if (nameObject.name === item.name){
+        console.log('found')
+        found = true
+      }
+    })
+
+    if (found) {
+      window.alert(`${nameObject.name} Already exists`)
+    }else{
+      setPersons(persons.concat(nameObject))
+    }
+
     setNewName('')
   }
 
