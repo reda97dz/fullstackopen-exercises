@@ -1,4 +1,7 @@
 import React, { useState } from 'react'
+import Filter from './components/Filter'
+import PersonForm from './components/PersonForm'
+import Persons from './components/Persons'
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -9,9 +12,10 @@ const App = () => {
   ])
 
   const [ newName, setNewName ] = useState('')
-  const [ newNumber, setNewNumber] = useState('')
+  const [ newNumber, setNewNumber ] = useState('')
   const [personsToShow, setPersonsToShow] = useState(persons)
   const [newFilter, setFilter] = useState('')
+
   const handleNameChange = (event) => {
     setNewName(event.target.value)
   }
@@ -30,11 +34,9 @@ const App = () => {
 
     var found = false
 
-    persons.forEach(function (item) {
-      if (nameObject.number === item.number ){
-        found = true
-      }
-    })
+    if (persons.some(person => person.name === newName)) {
+      found = true
+    }
 
     if (found) {
       window.alert(`A person with the number ${nameObject.number} already exists`)
@@ -57,24 +59,11 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-          filter shown with <input value={newFilter} onChange={handleFilterChange} />
-      </div>
-      <h2>Add New</h2>
-      <form onSubmit={addName}>
-        <div>
-          name: <input value={newName} onChange={handleNameChange} />
-        </div>
-        <div>
-          number <input value={newNumber} onChange={handleNumberChange} />
-          </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
-      {personsToShow.map(person => 
-        <p key={person.number}>{person.name} {person.number}</p>)}
+      <Filter value={newFilter} onChange={handleFilterChange} />
+      <h3>Add New</h3>
+      <PersonForm onSubmit={addName} name={newName} handleNameChange={handleNameChange} number={newNumber} handleNumberChange={handleNumberChange}  />
+      <h3>Numbers</h3>
+      <Persons personsToShow={personsToShow} />
     </div>
   )
 }
