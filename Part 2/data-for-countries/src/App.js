@@ -32,7 +32,7 @@ const App = () => {
   return (
     <div>
       <Filter value={newFilter} onChange={handleFilterChange} />
-      <Content list={countriesToShow} />
+      <Content list={countriesToShow} setCountries={setCountriesToShow} />
     </div>   
   )
 }
