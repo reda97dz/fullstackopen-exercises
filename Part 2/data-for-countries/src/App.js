@@ -14,7 +14,7 @@ const App = () => {
       .then(response => 
         setCountries(response.data))
   }
-
+  
   useEffect(hook, [])
 
   // console.log(countries[0])
