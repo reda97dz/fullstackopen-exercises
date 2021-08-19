@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
+import personService from './services/persons'
 
 const App = () => {
 
@@ -13,16 +13,16 @@ const App = () => {
   const [newFilter, setFilter] = useState('')
 
   const hook = () => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        setPersons(response.data)
+    personService
+      .getAll()
+      .then(initialPersons => {
+        console.log(initialPersons)
+        setPersonsToShow(initialPersons)
       })
   }
 
   useEffect(hook, [])
 
-  console.log('render', persons.length, 'people')
 
   const handleNameChange = (event) => {
     setNewName(event.target.value)
@@ -49,8 +49,12 @@ const App = () => {
     if (found) {
       window.alert(`A person with the number ${nameObject.number} already exists`)
     }else{
-      setPersons(persons.concat(nameObject))
-      setPersonsToShow(persons)
+      personService
+        .create(nameObject)
+        .then(returnedPerson => {
+          setPersons(persons.concat(returnedPerson))
+          setPersonsToShow(persons)
+        })
     }
 
     setNewName('')
