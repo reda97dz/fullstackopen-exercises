@@ -36,20 +36,33 @@ const App = () => {
   const addName = (event) => {
     event.preventDefault()
 
-    const nameObject = {
-      name: newName,
-      number: newNumber
-    }
+    const person = persons.filter((person) =>
+        person.name === newName
+    )
 
+    const personToAdd = person[0]
+    const updatedPerson = { ...personToAdd, number: newNumber }
+    
     var found = false
 
-    if (persons.some(person => person.name === newName)) {
+    if (person.length !== 0) {
       found = true
     }
 
     if (found) {
-      window.alert(`A person with the number ${nameObject.number} already exists`)
+      if (window.confirm(`A person with the number ${person.number} already exists, replace this number with new one?`)){
+        personService
+          .update(updatedPerson.id, updatedPerson)
+          .then(returnedPerson => {
+          setPersons(persons.map(person => person.id !== personToAdd ? person : returnedPerson))
+          })
+      }
+
     }else{
+      const nameObject = {
+        name: newName,
+        number: newNumber
+      }
       personService
         .create(nameObject)
         .then(returnedPerson => {
