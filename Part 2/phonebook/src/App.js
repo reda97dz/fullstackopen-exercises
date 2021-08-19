@@ -58,6 +58,13 @@ const App = () => {
           .then(returnedPerson => {
           setPersons(persons.map(person => person.id !== personToAdd ? person : returnedPerson))
           })
+          .catch((error) => {
+            console.log(error)
+            setNewMessage(`Person ${updatedPerson.name} has been already been deleted from the server`)
+          })
+          setTimeout(() => {
+            setNewMessage(null)
+          },5000)
       }
 
     }else{
