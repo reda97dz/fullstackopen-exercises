@@ -9,7 +9,7 @@ const App = () => {
   const [persons, setPersons] = useState([])
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
-  const [personsToShow, setPersonsToShow] = useState(persons)
+  const [personsToShow, setPersonsToShow] = useState([])
   const [newFilter, setFilter] = useState('')
 
   const hook = () => {
@@ -17,6 +17,7 @@ const App = () => {
       .getAll()
       .then(initialPersons => {
         console.log(initialPersons)
+        setPersons(initialPersons)
         setPersonsToShow(initialPersons)
       })
   }
@@ -68,6 +69,16 @@ const App = () => {
     setPersonsToShow(filteredPersons)
 }
 
+const deletePerson = (id) => {
+  const person = persons.filter(p => p.id === id)
+  console.log(person)
+  const personId = person[0].id
+  if (window.confirm(`Are you sure you want to delete ${person[0].name}?`)) {
+    personService.deletePerson(personId)
+    setPersons(persons.filter(person => person.id !== personId))
+  }
+}
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -75,7 +86,7 @@ const App = () => {
       <h3>Add New</h3>
       <PersonForm onSubmit={addName} name={newName} handleNameChange={handleNameChange} number={newNumber} handleNumberChange={handleNumberChange}  />
       <h3>Numbers</h3>
-      <Persons personsToShow={personsToShow} />
+      <Persons personsToShow={personsToShow} deletePerson={deletePerson} />
     </div>
   )
 }
