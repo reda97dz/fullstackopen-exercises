@@ -57,6 +57,7 @@ const App = () => {
           .update(updatedPerson.id, updatedPerson)
           .then(returnedPerson => {
           setPersons(persons.map(person => person.id !== personToAdd ? person : returnedPerson))
+          setNewMessage(`Person ${updatedPerson.name} has been updated`)
           })
           .catch((error) => {
             console.log(error)
