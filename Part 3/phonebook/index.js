@@ -1,4 +1,4 @@
-const { response } = require('express')
+const { response, request } = require('express')
 const express = require('express')
 const app = express()
 
@@ -60,6 +60,26 @@ app.delete('/api/persons/:id', (request, response) => {
     persons = persons.filter(person => person.id !== id)
 
     response.status(204).end()
+})
+
+const generateId = () => {
+    const min = Math.ceil(5)
+    const max = Math.floor(999)
+    return Math.floor(Math.random() * (max - min) + min)
+}
+
+app.post('/api/persons', (request, response) => {
+    const body = request.body
+
+    const person = {
+        name: body.name,
+        number: body.number,
+        id: generateId(),
+    }
+
+    persons = persons.concat(person)
+    response.json(person)
+
 })
 
 const PORT = 3001
