@@ -23,7 +23,7 @@ app.use(morgan((tokens, req, res)=>{
 let persons = [
     { 
       "id": 1,
-      "name": "Arto Hellas", 
+      "name": "Arto Hells", 
       "number": "040-123456"
     },
     { 
@@ -38,7 +38,7 @@ let persons = [
     },
     { 
       "id": 4,
-      "name": "Mary Poppendieck", 
+      "name": "Mary Poppenieck", 
       "number": "39-23-6423122"
     }
 ]
