@@ -61,6 +61,7 @@ const App = () => {
           })
           .catch((error) => {
             console.log(error)
+            setPersons(persons.filter(person => person.id != updatedPerson.id))
             setNewMessage(`Person ${updatedPerson.name} has been already been deleted from the server`)
           })
           setTimeout(() => {
@@ -83,6 +84,13 @@ const App = () => {
             setNewMessage(null)
           }, 5000)
         })
+        .catch(error => {
+          setNewMessage(`${error.response.data.error}`)
+          setTimeout(()=>{
+            setNewMessage(null)
+          }, 5000)
+          console.log(error.response.data)
+        })
     }
 
     setNewName('')
@@ -98,11 +106,15 @@ const App = () => {
 
 const deletePerson = (id) => {
   const person = persons.filter(p => p.id === id)
-  console.log(person)
   const personId = person[0].id
-  if (window.confirm(`Are you sure you want to delete ${person[0].name}?`)) {
+  const personName = person[0].name
+  if (window.confirm(`Are you sure you want to delete ${personName}?`)) {
     personService.deletePerson(personId)
+    setNewMessage(`${personName} deleted`)
     setPersons(persons.filter(person => person.id !== personId))
+    setTimeout(()=>{
+      setNewMessage(null)
+    }, 5000)
   }
 }
 
