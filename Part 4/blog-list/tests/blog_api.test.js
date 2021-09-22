@@ -15,7 +15,13 @@ beforeEach(async () => {
 test('all blogs are returned', async () => {
     const response = await api.get('/api/blogs').expect(200).expect('Content-type', /application\/json/)
     expect(response.body).toHaveLength(helper.initialBlogs.length)
-}, 100000)
+})
+
+test('unique identifier of a blog is id', async () => {
+    const blogs = await api.get('/api/blogs').expect(200).expect('Content-type', /application\/json/)
+    expect(blogs.body[0].id).toBeDefined()
+})
+
 
 afterAll(() => {
     mongoose.connection.close()
