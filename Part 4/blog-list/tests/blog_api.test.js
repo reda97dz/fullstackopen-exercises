@@ -2,14 +2,14 @@ const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
 const api = supertest(app)
+const bcrypt = require('bcrypt')
 const Blog = require('../models/blog')
+const User = require('../models/user')
 const helper = require('./list_helper')
 
 beforeEach(async () => {
     await Blog.deleteMany({})
-    const blogObjects = helper.initialBlogs.map(blog => new Blog(blog))
-    const promiseArray = blogObjects.map(blog => blog.save())
-    await Promise.all(promiseArray)
+    await Blog.insertMany(helper.initialBlogs)
 })
 
 test('all blogs are returned', async () => {
@@ -86,6 +86,34 @@ test('can update a post', async () => {
     const updatedBlog = blogsAtEnd.find(blog => blog.id === blogToUpdate.id)
     expect(updatedBlog.title).toBe('Exit Strategy')
 })
+
+describe('User tests', () => {
+    beforeEach(async () => {
+        await User.deleteMany({})
+        
+        const passwordHash = await bcrypt.hash('thecret', 10)
+        const user = new User({username: 'root', passwordHash})
+        
+        await user.save()
+    })
+
+    test('invalid users are note added', async () => {
+        const usersAtStart = await helper.usersInDb()
+
+        const newUser = {
+            username: 'r',
+            name: 'Superman',
+            password: 'pa'
+        }
+
+        const result = await api.post('/api/users').send(newUser).expect(400).expect('Content-Type', /application\/json/)
+        expect(result.body.error).toContain('password and/or username are too short')
+        const usersAtEnd = await helper.usersInDb()
+        expect(usersAtStart).toHaveLength(usersAtEnd.length)
+
+    })
+})
+
 
 afterAll(() => {
     mongoose.connection.close()
