@@ -69,6 +69,24 @@ test('can delete a post', async () => {
 
 })
 
+test('can update a post', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToUpdate = blogsAtStart[0]
+
+    const blog = {
+        title: "Exit Strategy",
+        author: "Martha wells",
+        url: "goodreads.com/exist_strategy",
+        likes: 200
+    }
+
+    await api.put(`/api/blogs/${blogToUpdate.id}`).send(blog).expect(200).expect('Content-Type', /application\/json/)
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd).toHaveLength(blogsAtStart.length)
+    const updatedBlog = blogsAtEnd.find(blog => blog.id === blogToUpdate.id)
+    expect(updatedBlog.title).toBe('Exit Strategy')
+})
+
 afterAll(() => {
     mongoose.connection.close()
 })

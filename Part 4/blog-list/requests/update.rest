@@ -1,0 +1,9 @@
+PUT http://localhost:3001/api/blogs/614c618506d6d9c83c7df697
+Content-Type: application/json
+
+{
+    "title": "The Restaurant at the End of the Universe",
+    "author": "Douglas Adams",
+    "url": "https://www.goodreads.com/book/show/8695.The_Restaurant_at_the_End_of_the_Universe",
+    "likes": 152
+}
