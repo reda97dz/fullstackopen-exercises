@@ -58,6 +58,17 @@ test('400 bad request if title and url are missing', async () => {
     await api.post('/api/blogs').send(newBlog).expect(400)
 })
 
+test('can delete a post', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToDelete = blogsAtStart[0]
+
+    await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204)
+    
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd).toHaveLength(blogsAtStart.length - 1)
+
+})
+
 afterAll(() => {
     mongoose.connection.close()
 })
