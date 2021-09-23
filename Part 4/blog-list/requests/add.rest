@@ -2,7 +2,6 @@ post http://localhost:3001/api/blogs
 Content-Type: application/json
 
 {
-    "title": "The restaurant at the end of the universe",
-    "author": "Douglas Adams",
-    "url": "url"
+    "title": "So long and thanks for all tthe fish",
+    "author": "Douglas Adams"
 }
