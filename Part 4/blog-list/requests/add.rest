@@ -1,9 +1,8 @@
-post http://localhost:3003/api/blogs
+post http://localhost:3001/api/blogs
 Content-Type: application/json
 
 {
-    "title": "The hichhiker's guide to the galaxy",
+    "title": "The restaurant at the end of the universe",
     "author": "Douglas Adams",
-    "url": "url",
-    "likes": 5265265
+    "url": "url"
 }
