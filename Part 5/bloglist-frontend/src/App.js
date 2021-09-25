@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import Notification from './components/Notification'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
+  const [message, setMessage] = useState(null)
 
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
@@ -32,13 +34,16 @@ const App = () => {
     event.preventDefault()
     try{
       const user = await loginService.login({username, password,})
-      window.localStorage.setItem('loggedBlogAppuser', JSON.stringify(user))
       blogService.setToken(user.token)
+      window.localStorage.setItem('loggedBlogAppuser', JSON.stringify(user))
       setUser(user)
       setUsername('')
       setPassword('')
     } catch (exception){
-      console.log('error logging in')
+      setMessage("Wrong Credentials")
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000);
     }
   }
 
@@ -56,6 +61,10 @@ const App = () => {
           setTitle('')
           setAuthor('')
           setUrl('')
+          setMessage(`Blog "${title}" by ${author} was added`)
+          setTimeout(() => {
+            setMessage(null)
+          }, 5000);
         })
   }
   
@@ -65,6 +74,7 @@ const App = () => {
     return (
       <div> 
         <h2>Login</h2>
+        <Notification message={message}/>
         <form onSubmit={handleLogin}>
           <div>
             username
@@ -83,6 +93,7 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
+      <Notification message={message}/>
       <div>
         <p>
           {user.name} logged-in
