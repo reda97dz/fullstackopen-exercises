@@ -9,6 +9,10 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
+
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
@@ -38,6 +42,24 @@ const App = () => {
     }
   }
 
+  const addBlog = (event) => {
+    event.preventDefault()
+    const blogObject = {
+      title: title,
+      author: author,
+      url: url
+    }
+    blogService
+      .create(blogObject)
+        .then(returnedBlog => {
+          setBlogs(blogs.concat(returnedBlog))
+          setTitle('')
+          setAuthor('')
+          setUrl('')
+        })
+  }
+  
+
   if (user === null) {
 
     return (
@@ -50,7 +72,7 @@ const App = () => {
           </div>
           <div>
             password
-            <input type="password" name="password" value={password} onChange={({target})=>setUsername(target.value)} />  
+            <input type="password" name="password" value={password} onChange={({target})=>setPassword(target.value)} />  
           </div>
           <button type="submit">login</button>
         </form>
@@ -67,6 +89,22 @@ const App = () => {
           <button onClick={()=>{window.localStorage.removeItem('loggedBlogAppuser'); setUser(null)}}>logout</button>
         </p>
       </div>
+      <h2>create new</h2>
+      <form onSubmit={addBlog}>
+        <div>
+          title:
+          <input type="text" name="title" value={title} onChange={({target})=>setTitle(target.value)}/>
+        </div>
+        <div>
+          author:
+          <input type="text" name="author" value={author} onChange={({target})=>setAuthor(target.value)}/>
+        </div>
+        <div>
+          url:
+          <input type="text" name="url" value={url} onChange={({target})=>setUrl(target.value)}/>
+        </div>
+        <button type="submit">create</button>
+      </form>
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}
